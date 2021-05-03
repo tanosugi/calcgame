@@ -96,7 +96,9 @@ class CreateGameMutation(relay.ClientIDMutation):
         # game.save()
         profile = Profile.objects.get(id=from_global_id(input.get("id"))[1])
         profile.game_playing.clear()
-        profile.game_playing.create()
+        profile.game_playing.create(owner_id=profile.id)
+        # profile.game_playing.owner_id = profile.id
+        profile.is_game_owner = True
         profile.save()
         return CreateGameMutation(profile=profile)
 
@@ -116,28 +118,35 @@ class JoinGameMutation(relay.ClientIDMutation):
         profile = Profile.objects.get(id=from_global_id(input.get("id"))[1])
         profile.game_playing.clear()
         profile.game_playing.set([game])
+        profile.game_playing.joiner_id = profile.id
+        profile.is_game_owner = False
         profile.save()
         return JoinGameMutation(profile=profile)
 
 
 class SetAndGetGameProgress(relay.ClientIDMutation):
     class Input:
-        my_progress = graphene.Int()
+        id = graphene.ID(required=True)
+        progress = graphene.Int()
 
     profile = graphene.Field(ProfileNode)
 
     @login_required
     def mutate_and_get_payload(root, info, **input):
-        my_profile = Profile.objects.get(id=from_global_id(input.get("id"))[1])
-        my_profile.game_progress = input.get("my_progress")
-        opponent_profile = (
-            Profile.objects.filter(id != my_profile.id)
-            .filter(my_profile.game_playing.id_to_start_game)
-            .first()
-        )
-        my_profile.opponent_game_progress = opponent_profile.game_progress
+        profile = Profile.objects.get(id=from_global_id(input.get("id"))[1])
+        profile.game_progress = input.get("progress")
+        if profile.is_game_owner is True:
+            game = Game.objects.filter(owner_id=profile.id).first()
+            profile.opponent_game_progress = game.joiner_progress  # type:ignore
+            game.owner_progress = profile.game_progress  # type:ignore
+            game.save()
+        else:
+            game = Game.objects.filter(joiner_id=profile.id).first()
+            profile.opponent_game_progress = game.owner_progress  # type:ignore
+            game.joiner_progress = profile.game_progress  # type:ignore
+            game.save()
 
-        return JoinGameMutation(profile=my_profile)
+        return JoinGameMutation(profile=profile)
 
 
 class Mutation(graphene.AbstractType):
