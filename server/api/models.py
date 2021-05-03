@@ -1,11 +1,12 @@
+import random
+
 from django.contrib.auth.models import User
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
 class Game(models.Model):
     id_to_start_game = models.IntegerField(
-        validators=[MinValueValidator(111), MaxValueValidator(999)]
+        default=random.randint(111, 999),
     )
 
 

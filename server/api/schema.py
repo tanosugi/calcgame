@@ -32,7 +32,7 @@ class GameNode(DjangoObjectType):
     class Meta:
         model = Game
         filter_fields = {
-            "user_prof__username": ["icontains"],
+            "id_to_start_game": ["icontains"],
         }
         interfaces = (relay.Node,)
 
@@ -81,7 +81,6 @@ class UpdateProfileMutation(relay.ClientIDMutation):
     def mutate_and_get_payload(root, info, **input):
         profile = Profile.objects.get(id=from_global_id(input.get("id"))[1])
         profile.save()
-
         return UpdateProfileMutation(profile=profile)
 
 
@@ -89,16 +88,15 @@ class CreateGameMutation(relay.ClientIDMutation):
     class Input:
         id = graphene.ID(required=True)
 
-    game = graphene.Field(GameNode)
+    profile = graphene.Field(ProfileNode)
 
     @login_required
     def mutate_and_get_payload(root, info, **input):
         game = Game()
         game.save()
-        # profile = Profile.objects.get(user_prof=info.context.user.id)
-        # profile.game_playing = game
-
-        return CreateGameMutation(game=game)
+        profile = Profile.objects.get(id=from_global_id(input.get("id"))[1])
+        profile.save()
+        return CreateGameMutation(profile=profile)
 
 
 class Mutation(graphene.AbstractType):
