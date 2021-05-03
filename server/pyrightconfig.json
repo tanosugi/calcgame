@@ -1,8 +1,0 @@
-{
-  "venvPath": ".",
-  "venv": ".venv",
-  "pythonVersion":"3.7",
-  "exclude":["./*/migrations","./.venv/**","./typestub/**"],
-  "typeCheckingMode":"basic",
-  "stubPath": "typestub"
-}
