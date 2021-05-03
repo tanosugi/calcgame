@@ -1,0 +1,41 @@
+version: "3.2"
+
+services:
+  postgres:
+    container_name: caclgame_postgres
+    # image: $AWS_ECR_REPO_POSTGRES
+    build:
+      context: ./postgresql
+      # cache_from:
+      #   - $AWS_ECR_REPO_POSTGRES:latest
+    ports:
+      - "5432:5432"
+    # データベースの永続化
+    volumes:
+      - ./.db-data:/var/lib/postgresql/data
+    env_file: ./.env
+    hostname: caclgame_postgres
+
+  # django:
+  #   container_name: caclgame_django
+  #   image: $AWS_ECR_REPO_DJANGO
+  #   build:
+  #     context: ./server
+  #     cache_from:
+  #       - $AWS_ECR_REPO_DJANGO:latest
+  #   expose:
+  #     - "8001"
+  #   depends_on:
+  #     - postgres
+  #   env_file: ./.env
+  # nginx:
+  #   container_name: caclgame_nginx
+  #   image: $AWS_ECR_REPO_NGINX
+  #   build:
+  #     context: ./nginx
+  #     cache_from:
+  #       - $AWS_ECR_REPO_NGINX:latest
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - django

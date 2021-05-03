@@ -1,0 +1,75 @@
+{
+  "name": "calcgame",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "run-all-after-lint-format": "npm-run-all --sequential --print-label --print-name lint-all-server-client run-all-db-server-client",
+    "run-all-db-server-client": "npm-run-all --parallel --print-label --print-name server:django-runserver docker-compose-up client:start ",
+    "lint-all-server-client": "npm-run-all --sequential --print-label --print-name server:black-isort-flake8-pyright client:prettier-lint:write",
+    "----server-------------------": "echo -----------------",
+    "server:poetry-install": "cd server; poetry install",
+    "server:psql-create-database": "cd server; echo \"CREATE USER PSQL_USER_FOR_DJANGO WITH PASSWORD 'PSQL_USER_PASSWORD_FOR_DJANGO'; CREATE DATABASE $npm_package_config_dev_sql_database;GRANT ALL PRIVILEGES ON DATABASE $npm_package_config_dev_sql_database TO PSQL_USER_FOR_DJANGO;\" | psql -U postgres -h localhost -p 5432",
+    "server:django-start-project": "cd server; poetry run django-admin startproject $npm_package_config_dev_django_project .",
+    "server:django-start-app-api": "cd server; poetry run django-admin startapp api",
+    "server:django-create-superuser": "cd server; poetry run ./manage.py createsuperuser",
+    "server:django-makemigrations": "cd server; poetry run ./manage.py makemigrations",
+    "server:django-migrate": "cd server; poetry run ./manage.py migrate",
+    "server:django-collectstatic": "cd server; poetry run ./manage.py collectstatic",
+    "server:django-runserver": "cd server; poetry run ./manage.py runserver & sleep 5 && touch project/settings.py",
+    "server:django-shell-plus": "cd server; poetry run ./manage.py shell_plus --notebook",
+    "server:format-black-write": "cd server; poetry run black .",
+    "server:isort": "cd server; poetry run isort .",
+    "server:lint-flake8": "cd server; poetry run flake8 .",
+    "server:pyright": "cd server; pyright .",
+    "server:black-isort-flake8-pyright": "npm-run-all --sequential --print-label --print-name server:format-black-write server:isort server:lint-flake8 server:pyright",
+    "----docker-------------------": "echo -----------------",
+    "docker-compose-build": "docker-compose build",
+    "docker-compose-up": "docker-compose up",
+    "docker-compose-up-force-recreate": "docker-compose up --force-recreate",
+    "docker-compose-down": "docker-compose down",
+    "docker-psql-login": "docker exec -it pandatche_postgres bash",
+    "docker-createsuperuser": "docker exec -it pandatch_django poetry run ./manage.py createsuperuser",
+    "docker-django-makemigrations": "docker exec -it pandatch_django  poetry run ./manage.py makemigrations",
+    "docker-django-migrate": "docker exec -it pandatch_django  poetry run ./manage.py migrate",
+    "docker-push": ". ./.env; docker tag pandatch_postgres:latest ${AWS_ECR_ACCOUNT_URL}/pandatch_postgres:latest;docker push ${AWS_ECR_ACCOUNT_URL}/pandatch_postgres:latest; docker tag pandatch_django:latest ${AWS_ECR_ACCOUNT_URL}/pandatch_django:latest;docker push ${AWS_ECR_ACCOUNT_URL}/pandatch_django:latest; docker tag pandatch_nginx:latest ${AWS_ECR_ACCOUNT_URL}/pandatch_nginx:latest;docker push ${AWS_ECR_ACCOUNT_URL}/pandatch_nginx:latest;",
+    "----client-------------------": "echo -----------------",
+    "client:create-react-app": "npx create-react-app --template typescript client",
+    "client:npm-install": "npm --prefix client install",
+    "client:install-eslint-prettier": "npm --prefix client install -D eslint eslint-config-prettier eslint-plugin-react prettier",
+    "client:start": "npm --prefix client start",
+    "client:build": "npm --prefix client run build",
+    "client:lint:write": "npm --prefix client run lint:write",
+    "client:lint:check": "npm --prefix client run lint:check",
+    "client:prettier:write": "npm --prefix client run prettier:write",
+    "client:prettier-lint:write": "npm-run-all --sequential --print-label --print-name client:lint:write client:prettier:write",
+    "client:prettier:check": "npm --prefix client run prettier:check",
+    "client:test": "npm --prefix client test",
+    "client:settings-csv2json": "cd client/src; cat settings.csv  | jq -s -R '[split(\"\\n\")[]|select(length > 0)|split(\",\")|map(gsub(\"^\\\\s+|\\\\s+$\";\"\"))]|.[0] as $header | .[1:]|map([ $header, . ]|transpose|map({\"key\": (.[0]//\"\"), \"value\": (.[1]//\"\")})|from_entries)' > settings.json",
+    "----circleci-------------------": "echo -----------------",
+    "make_dotenv_circleci_env_file": "cat .env | base64 > .env_circleci_env_file; code .env_circleci_env_file",
+    "----terraform-------------------": "echo -----------------",
+    "terraform-destroy-develop": ". ./.env; cd infrastructure-saving; terraform workspace select develop; terraform destroy --auto-approve ",
+    "terraform-destroy-staging": ". ./.env; cd infrastructure-saving; terraform workspace select staging; terraform destroy --auto-approve",
+    "terraform-destroy-main": ". ./.env; cd infrastructure-saving; terraform workspace select main; terraform destroy --auto-approve"
+  },
+  "config": {
+    "dev": {
+      "sql_database": "calcgame_db",
+      "django_project": "project"
+    }
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tanosugi/calcgame.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tanosugi/calcgame/issues"
+  },
+  "homepage": "https://github.com/tanosugi/calcgame#readme"
+}
