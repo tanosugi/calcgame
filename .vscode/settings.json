@@ -1,0 +1,13 @@
+{
+  "python.pythonPath": "server/.venv/bin/python3.8",
+  "python.formatting.blackPath": "server/.venv/bin/black",
+  "eslint.workingDirectories": ["client/src"],
+  "python.formatting.blackArgs": [
+    "--config",
+    "server/pyproject.toml",
+    "--verbose"
+  ],
+  "python.autoComplete.extraPaths": [
+    "./server"
+  ],
+}
