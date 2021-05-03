@@ -1,0 +1,87 @@
+mutation CREATE_USER4{
+  createUser(input:{username:"test4",password:"password4"}){
+    user {
+      id
+    }
+  }
+}
+
+mutation GET_TOKEN4{
+  tokenAuth(username:"test4",password:"password4"){
+    token
+  }
+}
+
+mutation CREATE_USER2{
+  createUser(input:{username:"test2",password:"password2"}){
+    user {
+      id
+    }
+  }
+}
+
+mutation GET_TOKEN2{
+  tokenAuth(username:"test2",password:"password2"){
+    token
+  }
+}
+
+query ME{
+  me{
+    username
+    id
+    password
+  }
+}
+
+
+query GET_PROFILES{
+  allProfiles {
+    edges {
+      node {
+        id
+        userProf {
+          id
+          username
+        }
+      }
+    }
+  }
+}
+
+
+query GET_MYPROFILE{
+  profile{
+    id
+    userProf{
+      username
+    }
+  }
+}
+
+mutation UPDATE_PROFILE{
+  updateProfile(input:{id:"UHJvZmlsZU5vZGU6MQ=="}){
+    profile{
+      id
+    }
+  }
+}
+
+
+mutation CREATE_GAME_byme{
+  createGame(input:{id:"VXNlck5vZGU6Mg=="}){
+    profile{
+      id
+      gamePlaying{edges{node{id}}}
+    }
+  }
+}
+
+mutation JOIN_GAME_byme_game16{
+  joinGame(input:{id:"UHJvZmlsZU5vZGU6Mg==",idToJoinGame:7349}){
+    profile{
+      id
+      gamePlaying{edges{node{id}}}
+    }
+  }
+}

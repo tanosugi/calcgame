@@ -5,7 +5,7 @@ from graphene import relay  # type:ignore
 from graphene_django import DjangoObjectType  # type:ignore
 from graphene_django.filter import DjangoFilterConnectionField
 from graphql_jwt.decorators import login_required
-from graphql_relay import from_global_id  # type:ignore
+from graphql_relay import from_global_id
 
 from .models import Game, Profile
 
@@ -92,11 +92,52 @@ class CreateGameMutation(relay.ClientIDMutation):
 
     @login_required
     def mutate_and_get_payload(root, info, **input):
-        game = Game()
-        game.save()
+        # game = Game()
+        # game.save()
         profile = Profile.objects.get(id=from_global_id(input.get("id"))[1])
+        profile.game_playing.clear()
+        profile.game_playing.create()
         profile.save()
         return CreateGameMutation(profile=profile)
+
+
+class JoinGameMutation(relay.ClientIDMutation):
+    class Input:
+        id = graphene.ID(required=True)
+        id_to_join_game = graphene.Int(required=True)
+
+    profile = graphene.Field(ProfileNode)
+
+    @login_required
+    def mutate_and_get_payload(root, info, **input):
+        game = Game.objects.filter(
+            id_to_start_game=input.get("id_to_join_game")
+        ).first()
+        profile = Profile.objects.get(id=from_global_id(input.get("id"))[1])
+        profile.game_playing.clear()
+        profile.game_playing.set([game])
+        profile.save()
+        return JoinGameMutation(profile=profile)
+
+
+class SetAndGetGameProgress(relay.ClientIDMutation):
+    class Input:
+        my_progress = graphene.Int()
+
+    profile = graphene.Field(ProfileNode)
+
+    @login_required
+    def mutate_and_get_payload(root, info, **input):
+        my_profile = Profile.objects.get(id=from_global_id(input.get("id"))[1])
+        my_profile.game_progress = input.get("my_progress")
+        opponent_profile = (
+            Profile.objects.filter(id != my_profile.id)
+            .filter(my_profile.game_playing.id_to_start_game)
+            .first()
+        )
+        my_profile.opponent_game_progress = opponent_profile.game_progress
+
+        return JoinGameMutation(profile=my_profile)
 
 
 class Mutation(graphene.AbstractType):
@@ -105,6 +146,8 @@ class Mutation(graphene.AbstractType):
     # create_profile = ProfileCreateMutation.Field()
     update_profile = UpdateProfileMutation.Field()
     create_game = CreateGameMutation.Field()
+    join_game = JoinGameMutation.Field()
+    set_and_get_game_progress = SetAndGetGameProgress.Field()
 
 
 class Query(graphene.ObjectType):
