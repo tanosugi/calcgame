@@ -1,16 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Box, Button, Container, Grid, TextField } from "@material-ui/core";
-import React, { ReactElement, useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  TextField,
+  Typography,
+} from "@material-ui/core";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ADDITION, useCalcGameContext } from "../context/CalcGameContext";
+import { useCalcGameContext } from "../context/CalcGameContext";
 
 const CalcGameView: React.FC = (): ReactElement => {
   const { problems, createProblem } = useCalcGameContext();
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const inputEl = useRef<HTMLInputElement>(null);
   const [inputAnswer, setInputAnswer] = useState<string>("");
   const [numberProgress, setNumberProgress] = useState<number>(0);
-  const [shownArg1, setShownArg1] = useState<String>("a");
+  const [shownArg1, setShownArg1] = useState<String>("");
   const [shownArg2, setShownArg2] = useState<String>("");
+  const [calcSign, setCalcSign] = useState<String>("");
+  const [correctAnswer, setCorrectAnswer] = useState<String>("");
+  const [time, setTime] = useState(new Date().toLocaleTimeString());
+  const secondsPassed = useRef(0);
   const handleClickNumber = (n: number) => {
     console.log(n);
     setInputAnswer(inputAnswer + n.toString());
@@ -34,7 +46,8 @@ const CalcGameView: React.FC = (): ReactElement => {
     if (event.key === "Enter") checkAnswer();
   };
   const checkAnswer = () => {
-    if (inputAnswer === problems[numberProgress][3]) {
+    if (inputAnswer.length == 0) return;
+    if (inputAnswer === correctAnswer) {
       setNumberProgress(numberProgress + 1);
       const audio = new Audio(
         process.env.PUBLIC_URL + "/sounds/correctAnswer.mp3"
@@ -42,29 +55,40 @@ const CalcGameView: React.FC = (): ReactElement => {
       audio.play();
       setInputAnswer("");
 
-      return true;
+      return;
     } else {
       const audio = new Audio(
         process.env.PUBLIC_URL + "/sounds/incorrectAnswer.mp3"
       );
       audio.play();
       setInputAnswer("");
-      return false;
+      return;
     }
   };
-  const finishGame = () => {};
-  useEffect(() => {
-    createProblem(ADDITION);
+  const setCurrentProblem = () => {
     setShownArg1(problems[numberProgress][0]);
+    setCalcSign(problems[numberProgress][1]);
     setShownArg2(problems[numberProgress][2]);
+    setCorrectAnswer(problems[numberProgress][3]);
+  };
+  useEffect(() => {
+    createProblem();
+    setCurrentProblem();
     // SUBTRACTION,MULTIPLICATION,DIVISION,
   }, []);
   useEffect(() => {
-    setShownArg1(problems[numberProgress][0]);
-    setShownArg2(problems[numberProgress][2]);
+    if (inputEl && inputEl.current) {
+      inputEl.current.focus();
+    }
+  }, [inputEl, inputEl.current]);
+  useEffect(() => {
+    if (10 <= numberProgress) {
+      navigate("../result", { replace: true });
+    }
+    setCurrentProblem();
   }, [numberProgress]);
   useEffect(() => {
-    if (inputAnswer.length > 1) checkAnswer();
+    if (correctAnswer.length <= inputAnswer.length) checkAnswer();
   }, [inputAnswer]);
   type PropsNumberButton = { numOnButton: number };
   const NumberButton: React.FC<PropsNumberButton> = ({
@@ -79,10 +103,20 @@ const CalcGameView: React.FC = (): ReactElement => {
           handleClickNumber(numOnButton);
         }}
       >
-        {numOnButton}
+        <Typography variant="h6">{numOnButton}</Typography>
       </Button>
     </Grid>
   );
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const date = new Date();
+      secondsPassed.current = secondsPassed.current + 1;
+      setTime(date.toLocaleTimeString());
+    }, 1000);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [time]);
 
   return (
     <Container maxWidth="sm">
@@ -94,39 +128,49 @@ const CalcGameView: React.FC = (): ReactElement => {
       >
         <Grid container spacing={3} direction="column">
           <Grid container item spacing={3} alignItems="center">
-            <Grid item xs={3}>
-              あいて
+            <Grid item xs={12}>
+              <Typography variant="h6">
+                {secondsPassed.current}
+                {"びょうけいか"}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid container item spacing={0} alignItems="center">
+            <Grid item xs={4}>
+              <Typography variant="h6"> あいて</Typography>
             </Grid>
             <Grid item xs={8}>
-              ★★★★★★★☆☆☆
+              <Typography variant="h6"> ★★★★★★★☆☆☆</Typography>
+            </Grid>
+          </Grid>
+          <Grid container item spacing={0} alignItems="center">
+            <Grid item xs={4}>
+              <Typography variant="h6">じぶん</Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <Typography variant="h6"> ★★★★★★★★☆☆</Typography>
             </Grid>
           </Grid>
           <Grid container item spacing={3} alignItems="center">
-            <Grid item xs={3}>
-              じぶん
-            </Grid>
-            <Grid item xs={8}>
-              ★★★★★★★★☆☆
-            </Grid>
-          </Grid>
-          <Grid container item spacing={3} alignItems="center">
             <Grid item xs={2}>
-              {shownArg1}
+              <Typography variant="h6"> {shownArg1}</Typography>
             </Grid>
             <Grid item xs={2}>
-              +
+              <Typography variant="h6"> {calcSign}</Typography>
             </Grid>
             <Grid item xs={2}>
-              {shownArg2}
+              <Typography variant="h6"> {shownArg2}</Typography>
             </Grid>
             <Grid item xs={2}>
-              =
+              <Typography variant="h6"> ＝</Typography>
             </Grid>
             <Grid item xs={4}>
               <TextField
+                size="medium"
                 id="answer"
                 label=""
                 value={inputAnswer}
+                ref={inputEl}
                 onChange={(e) => {
                   handleInput(e);
                 }}
@@ -144,7 +188,7 @@ const CalcGameView: React.FC = (): ReactElement => {
                 handleClickAnswer();
               }}
             >
-              こたえる
+              <Typography variant="h6"> こたえる</Typography>
             </Button>
           </Grid>
           <Grid container item spacing={3}>
@@ -172,7 +216,7 @@ const CalcGameView: React.FC = (): ReactElement => {
                   handleClickDelete();
                 }}
               >
-                けす
+                <Typography variant="h6">けす</Typography>
               </Button>
             </Grid>
           </Grid>

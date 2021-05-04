@@ -1,16 +1,18 @@
+/* eslint-disable @typescript-eslint/no-redeclare */
 import React, {
   createContext,
   ReactElement,
   useContext,
-  useEffect,
   useState,
 } from "react";
 
 const CalcGameContext = createContext(
   {} as {
     problems: string[][];
-    // setProblems: React.Dispatch<React.SetStateAction<string[][]>>;
-    createProblem: React.Dispatch<string>;
+    calcType: string;
+    setCalcType: React.Dispatch<React.SetStateAction<string>>;
+    createProblem: React.Dispatch<void>;
+    resetProblems: React.Dispatch<void>;
   }
 );
 
@@ -21,14 +23,18 @@ export const DIVISION = "DIVISION";
 
 const CalcGameContextProvider: React.FC = ({ children }): ReactElement => {
   const [problems, setProblems] = useState<string[][]>([]);
-  useEffect(() => {}, []);
+  const [calcType, setCalcType] = useState(ADDITION);
 
-  const createProblem = (problemTypes: string) => {
-    setProblems([[""]]);
+  const resetProblems = () => {
+    setProblems([]);
+  };
+
+  const createProblem = () => {
+    resetProblems();
     const arrayToUpdate = problems;
-    switch (problemTypes) {
+    switch (calcType) {
       case ADDITION:
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < 11; i++) {
           const arg1 = Math.floor(Math.random() * 10 + 1);
           const arg2 = Math.floor(Math.random() * 10 + 1);
           arrayToUpdate.push([
@@ -36,6 +42,42 @@ const CalcGameContextProvider: React.FC = ({ children }): ReactElement => {
             "+",
             arg2.toString(),
             (arg1 + arg2).toString(),
+          ]);
+        }
+        break;
+      case SUBTRACTION:
+        for (var i = 0; i < 11; i++) {
+          const arg1 = Math.floor(Math.random() * 10 + 1);
+          const arg2 = Math.floor(Math.random() * 10 + 1);
+          arrayToUpdate.push([
+            (arg1 + arg2).toString(),
+            "-",
+            arg1.toString(),
+            arg2.toString(),
+          ]);
+        }
+        break;
+      case MULTIPLICATION:
+        for (var i = 0; i < 11; i++) {
+          const arg1 = Math.floor(Math.random() * 10 + 1);
+          const arg2 = Math.floor(Math.random() * 10 + 1);
+          arrayToUpdate.push([
+            arg1.toString(),
+            "x",
+            arg2.toString(),
+            (arg1 * arg2).toString(),
+          ]);
+        }
+        break;
+      case DIVISION:
+        for (var i = 0; i < 11; i++) {
+          const arg1 = Math.floor(Math.random() * 10 + 1);
+          const arg2 = Math.floor(Math.random() * 10 + 1);
+          arrayToUpdate.push([
+            (arg1 * arg2).toString(),
+            "÷",
+            arg1.toString(),
+            arg2.toString(),
           ]);
         }
         break;
@@ -48,8 +90,10 @@ const CalcGameContextProvider: React.FC = ({ children }): ReactElement => {
     <CalcGameContext.Provider
       value={{
         problems,
-        // setProblems,
+        calcType,
+        setCalcType,
         createProblem,
+        resetProblems,
       }}
     >
       {children}

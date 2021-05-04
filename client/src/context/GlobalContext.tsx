@@ -1,8 +1,13 @@
 import React, { ReactElement } from "react";
 import CalcGameContext from "./CalcGameContext";
+import UserContextProvider from "./UserContext";
 
 const GlobalContextProvider: React.FC = ({ children }): ReactElement => {
-  return <CalcGameContext>{children}</CalcGameContext>;
+  return (
+    <UserContextProvider>
+      <CalcGameContext>{children}</CalcGameContext>
+    </UserContextProvider>
+  );
 };
 
 export default GlobalContextProvider;

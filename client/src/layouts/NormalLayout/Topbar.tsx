@@ -1,17 +1,17 @@
-import AppBar from "@material-ui/core/AppBar";
+import { AppBar, Link } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { default as React } from "react";
-
-const drawerWidth = 240;
+import { Link as RouterLink } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     appBar: {
       [theme.breakpoints.up("md")]: {
-        width: `calc(100% - ${drawerWidth}px)`,
+        width: "100%",
       },
+      underline: "none",
     },
   })
 );
@@ -22,8 +22,10 @@ const Topbar = () => {
   return (
     <AppBar position="fixed" className={classes.appBar}>
       <Toolbar>
-        <Typography variant="h6" noWrap component="div">
-          計算ゲーム
+        <Typography variant="h6" noWrap component="div" color="inherit">
+          <RouterLink to={"/"}>
+            <Link color="white">計算ゲーム</Link>
+          </RouterLink>
         </Typography>
       </Toolbar>
     </AppBar>
