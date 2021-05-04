@@ -49,7 +49,6 @@ query GET_PROFILES{
   }
 }
 
-
 query GET_MYPROFILE{
   profile{
     id

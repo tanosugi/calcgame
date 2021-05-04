@@ -36,7 +36,8 @@
     "prettier:check": "prettier --check 'src/**/*.{js,jsx,json,ts,tsx}'",
     "prettier:write": "prettier --write 'src/**/*.{js,jsx,json,ts,tsx}'",
     "test": "react-scripts test --env=jsdom --verbose",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "generate": "graphql-codegen --config codegen.yml"
   },
   "eslintConfig": {
     "extends": [
@@ -57,6 +58,15 @@
     ]
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "1.21.4",
+    "@graphql-codegen/fragment-matcher": "2.0.1",
+    "@graphql-codegen/introspection": "1.18.2",
+    "@graphql-codegen/typescript": "1.22.0",
+    "@graphql-codegen/typescript-document-nodes": "1.17.11",
+    "@graphql-codegen/typescript-graphql-files-modules": "1.18.1",
+    "@graphql-codegen/typescript-operations": "1.17.16",
+    "@graphql-codegen/typescript-react-apollo": "2.2.4",
+    "@graphql-codegen/urql-introspection": "1.2.0",
     "apollo-link-error": "^1.1.13",
     "eslint": "^7.25.0",
     "eslint-config-prettier": "^8.3.0",

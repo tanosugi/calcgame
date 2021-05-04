@@ -4,7 +4,7 @@ import React, {
   ReactElement,
   useContext,
   useEffect,
-  useState,
+  useState
 } from "react";
 import { useNavigate } from "react-router";
 import { GET_MY_USERNAME } from "../queries";

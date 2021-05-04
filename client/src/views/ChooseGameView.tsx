@@ -25,7 +25,12 @@ const ChooseGameView: React.FC = (): ReactElement => {
           maxHeight: 600,
         }}
       >
-        <Grid container spacing={3} direction="column">
+        <Grid
+          container
+          spacing={3}
+          direction="column"
+          style={{ paddingTop: "30px" }}
+        >
           <Grid container item spacing={1} alignItems="center">
             <Grid item>
               <Typography variant="h6">もんだい</Typography>

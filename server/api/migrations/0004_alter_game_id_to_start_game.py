@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0003_alter_game_id_to_start_game'),
+        ("api", "0003_alter_game_id_to_start_game"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='game',
-            name='id_to_start_game',
+            model_name="game",
+            name="id_to_start_game",
             field=models.IntegerField(default=5035),
         ),
     ]

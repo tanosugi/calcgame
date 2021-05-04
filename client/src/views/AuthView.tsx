@@ -12,7 +12,7 @@ import {
   Theme,
 } from "@material-ui/core";
 import { Form, Formik, FormikProps } from "formik";
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { useNavigate } from "react-router";
 import * as Yup from "yup";
 import { useUserContext } from "../context/UserContext";
@@ -113,15 +113,14 @@ const AuthView: React.FC = (): ReactElement => {
       });
       localStorage.setItem("token", result.data.tokenAuth.token);
       setIsLoggedIn(true);
-      // navigate("/app/fred");
-      navigate("/");
+      navigate("/meet");
     } catch (err) {
       alert(err.message);
     }
   };
-  useEffect(() => {
-    console.log(isLoggedIn);
-  }, [isLoggedIn]);
+  // useEffect(() => {
+  //   console.log(isLoggedIn);
+  // }, [isLoggedIn]);
 
   const authUser = async (data: ISignUpForm, resetForm: Function) => {
     try {
@@ -194,8 +193,8 @@ const AuthView: React.FC = (): ReactElement => {
                     confirmPassword: Yup.string()
                       .required("Required")
                       .test(
-                        "password-match",
-                        "Password musth match",
+                        "おなじパスワード",
+                        "おなじパスワードをいれてください",
                         function (value) {
                           return this.parent.password === value;
                         }
