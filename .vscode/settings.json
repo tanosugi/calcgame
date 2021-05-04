@@ -1,5 +1,5 @@
 {
-  "python.pythonPath": "server/.venv/bin/python3.8",
+  "python.pythonPath": "server/.venv/bin/python3",
   "python.formatting.blackPath": "server/.venv/bin/black",
   "eslint.workingDirectories": ["client/src"],
   "python.formatting.blackArgs": [

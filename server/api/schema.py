@@ -87,17 +87,17 @@ class UpdateProfileMutation(relay.ClientIDMutation):
 class CreateGameMutation(relay.ClientIDMutation):
     class Input:
         id = graphene.ID(required=True)
+        id_to_join_game = graphene.Int(required=True)
 
     profile = graphene.Field(ProfileNode)
 
     @login_required
     def mutate_and_get_payload(root, info, **input):
-        # game = Game()
-        # game.save()
         profile = Profile.objects.get(id=from_global_id(input.get("id"))[1])
         profile.game_playing.clear()
-        profile.game_playing.create(owner_id=profile.id)
-        # profile.game_playing.owner_id = profile.id
+        profile.game_playing.create(
+            owner_id=profile.id, id_to_start_game=input.get("id_to_join_game")
+        )
         profile.is_game_owner = True
         profile.save()
         return CreateGameMutation(profile=profile)
@@ -121,6 +121,8 @@ class JoinGameMutation(relay.ClientIDMutation):
         profile.game_playing.joiner_id = profile.id
         profile.is_game_owner = False
         profile.save()
+        game.joiner_id = profile.id
+        game.save()
         return JoinGameMutation(profile=profile)
 
 

@@ -1,0 +1,107 @@
+mutation CREATE_USER1{
+  createUser(input:{username:"test1",password:"password1"}){
+    user {
+      id
+    }
+  }
+}
+
+mutation GET_TOKEN1{
+  tokenAuth(username:"test1",password:"password1"){
+    token
+  }
+}
+
+mutation CREATE_USER2{
+  createUser(input:{username:"test2",password:"password2"}){
+    user {
+      id
+    }
+  }
+}
+
+mutation GET_TOKEN2{
+  tokenAuth(username:"test2",password:"password2"){
+    token
+  }
+}
+
+query ME{
+  me{
+    username
+    id
+    password
+  }
+}
+
+
+query GET_PROFILES{
+  allProfiles {
+    edges {
+      node {
+        id
+        userProf {
+          id
+          username
+        }
+      }
+    }
+  }
+}
+
+
+query GET_MYPROFILE{
+  profile{
+    id
+    userProf{
+      username
+    }
+  }
+}
+
+mutation UPDATE_PROFILE{
+  updateProfile(input:{id:"UHJvZmlsZU5vZGU6MQ=="}){
+    profile{
+      id
+    }
+  }
+}
+
+
+mutation CREATE_GAME_byme{
+  createGame(input:{id:"VXNlck5vZGU6Mg=="}){
+    profile{
+      id
+      gamePlaying{edges{node{id}}}
+    }
+  }
+}
+
+mutation JOIN_GAME_byme_game16{
+  joinGame(input:{id:"UHJvZmlsZU5vZGU6NQ==",idToJoinGame:7036}){
+    profile{
+      id
+      gamePlaying{
+        edges{
+          node{
+            id
+            idToStartGame
+            ownerId
+            ownerProgress
+            joinerId
+            joinerProgress
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation SetAndGetGameProgress{
+  setAndGetGameProgress(input:{id:"UHJvZmlsZU5vZGU6NQ==",progress:10}){
+    profile{
+      gameProgress
+      opponentGameProgress
+    }
+  }
+}

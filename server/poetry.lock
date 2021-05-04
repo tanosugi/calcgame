@@ -666,8 +666,8 @@ python-versions = "*"
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.8"
-content-hash = "ad0522dc9c6440939e71e87736610d53debb9603582c19d245ac170622561a24"
+python-versions = "^3.9"
+content-hash = "657592ad8d7b267af8c1b19467171cddc12a8dbed1715d0f26464776cfa12d6a"
 
 [metadata.files]
 aniso8601 = [

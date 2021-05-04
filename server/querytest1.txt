@@ -1,13 +1,13 @@
-mutation CREATE_USER4{
-  createUser(input:{username:"test4",password:"password4"}){
+mutation CREATE_USER1{
+  createUser(input:{username:"test1",password:"password1"}){
     user {
       id
     }
   }
 }
 
-mutation GET_TOKEN4{
-  tokenAuth(username:"test4",password:"password4"){
+mutation GET_TOKEN1{
+  tokenAuth(username:"test1",password:"password1"){
     token
   }
 }
@@ -69,7 +69,27 @@ mutation UPDATE_PROFILE{
 
 
 mutation CREATE_GAME_byme{
-  createGame(input:{id:"VXNlck5vZGU6Mg=="}){
+  createGame(input:{id:"UHJvZmlsZU5vZGU6Mw=="}){
+    profile{
+      id
+      gamePlaying{
+        edges{
+          node{
+            id
+            idToStartGame
+            ownerId
+            ownerProgress
+            joinerId
+            joinerProgress
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation JOIN_GAME_byme_game16{
+  joinGame(input:{id:"UHJvZmlsZU5vZGU6Mw==",idToJoinGame:2107}){
     profile{
       id
       gamePlaying{edges{node{id}}}
@@ -77,11 +97,11 @@ mutation CREATE_GAME_byme{
   }
 }
 
-mutation JOIN_GAME_byme_game16{
-  joinGame(input:{id:"UHJvZmlsZU5vZGU6Mg==",idToJoinGame:7349}){
+mutation SetAndGetGameProgress{
+  setAndGetGameProgress(input:{id:"UHJvZmlsZU5vZGU6Mw==",progress:5}){
     profile{
-      id
-      gamePlaying{edges{node{id}}}
+      gameProgress
+      opponentGameProgress
     }
   }
 }

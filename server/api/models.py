@@ -6,7 +6,7 @@ from django.db import models
 
 
 class Game(models.Model):
-    random.seed(datetime.now())
+    # random.seed(datetime.now())
     id_to_start_game = models.IntegerField(
         default=random.randint(1111, 9999),
     )
