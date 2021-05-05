@@ -5,10 +5,10 @@ echo frontend
 echo http://calcgame.s3-website-ap-northeast-1.amazonaws.com/
 echo ---------------------------
 set -x
-cd client
-npm run build
-aws --region ap-northeast-1 s3 sync build s3://calcgame --delete
-cd ..
+# cd client
+# npm run build
+# aws --region ap-northeast-1 s3 sync build s3://calcgame --delete
+# cd ..
 
 set +x
 echo ---------------------------
@@ -16,6 +16,7 @@ echo backend
 echo http://18.183.158.39:8000/
 echo ---------------------------
 set -x
+ssh -i ~/.ssh/calcgame-key.pem ec2-user@18.183.158.39 "mkdir calcgame"
 ssh -i ~/.ssh/calcgame-key.pem ec2-user@18.183.158.39 "cd calcgame; git pull"
 ssh -i ~/.ssh/calcgame-key.pem ec2-user@18.183.158.39 "cd calcgame; docker-compose down"
 ssh -i ~/.ssh/calcgame-key.pem ec2-user@18.183.158.39 "cd calcgame; docker-compose build"

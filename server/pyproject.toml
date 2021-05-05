@@ -8,7 +8,7 @@ authors = ["highlandscyclist <highlands.cyclist@gmail.com>"]
 
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.7"
 django-environ = "^0.4.5"
 Django = "^3.1.7"
 graphene-django = "^2.15.0"
