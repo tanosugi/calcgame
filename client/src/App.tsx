@@ -16,7 +16,8 @@ import routes from "./routes";
 
 const httpLink = new HttpLink({
   // uri: "http://devserver.tanosugi.com:80/graphql/",
-  uri: "http://127.0.0.1:8000/graphql/",
+  uri: "http://18.183.158.39:8000/graphql/", // デプロイ用
+  // uri: "http://127.0.0.1:8000/graphql/",  // 開発用
   // uri: "http://http://18.183.158.39:8000//graphql/",
   fetchOptions: { mode: "cors" },
 });

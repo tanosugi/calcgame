@@ -119,9 +119,6 @@ const ChooseGameView: React.FC = (): ReactElement => {
                 </Button>
               </Grid>
             </Grid>
-            <Typography variant="h6" color="error">
-              {"まだたいせんはみじっそう！！"}
-            </Typography>
             <Grid
               item
               container

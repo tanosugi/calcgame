@@ -175,6 +175,7 @@ class Query(graphene.ObjectType):
 
     @login_required
     def resolve_profile(self, info, **kwargs):
+        print("resolve_profile", info.context.user.id)
         return Profile.objects.get(user_prof=info.context.user.id)
 
     @login_required

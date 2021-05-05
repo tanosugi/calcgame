@@ -15,6 +15,7 @@ import { Form, Formik, FormikProps } from "formik";
 import React, { ReactElement, useState } from "react";
 import { useNavigate } from "react-router";
 import * as Yup from "yup";
+import { useBattleContext } from "../context/BattleContext";
 import { useUserContext } from "../context/UserContext";
 import { CREATE_USER, GET_TOKEN } from "../queries";
 
@@ -89,6 +90,7 @@ function a11yProps(index: number) {
 const AuthView: React.FC = (): ReactElement => {
   const classes = useStyles();
   const { isLoggedIn, setIsLoggedIn } = useUserContext();
+  const { queryAndSetUserProfId } = useBattleContext();
   const [value, setValue] = React.useState(0);
   const [displayFormStatus, setDisplayFormStatus] = useState(false);
   const [formStatus, setFormStatus] = useState<IFormStatus>({
@@ -113,6 +115,7 @@ const AuthView: React.FC = (): ReactElement => {
       });
       localStorage.setItem("token", result.data.tokenAuth.token);
       setIsLoggedIn(true);
+      queryAndSetUserProfId();
       navigate("/meet");
     } catch (err) {
       alert(err.message);
@@ -165,7 +168,7 @@ const AuthView: React.FC = (): ReactElement => {
                   aria-label="basic tabs example"
                   centered
                 >
-                  <Tab label="とくろく" {...a11yProps(0)} />
+                  <Tab label="とうろく" {...a11yProps(0)} />
                   <Tab label="ログイン" {...a11yProps(1)} />
                 </Tabs>
               </Box>

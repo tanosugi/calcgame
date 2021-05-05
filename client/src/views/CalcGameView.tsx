@@ -9,10 +9,15 @@ import {
 } from "@material-ui/core";
 import React, { ReactElement, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useBattleContext } from "../context/BattleContext";
 import { useCalcGameContext } from "../context/CalcGameContext";
 
 const CalcGameView: React.FC = (): ReactElement => {
   const { problems, createProblem } = useCalcGameContext();
+  const {
+    setAndGetGameProgressAndSetToProfile,
+    opponentGameProgress,
+  } = useBattleContext();
   const navigate = useNavigate();
   const inputEl = useRef<HTMLInputElement>(null);
   const [inputAnswer, setInputAnswer] = useState<string>("");
@@ -54,7 +59,7 @@ const CalcGameView: React.FC = (): ReactElement => {
       );
       audio.play();
       setInputAnswer("");
-
+      setAndGetGameProgressAndSetToProfile(numberProgress);
       return;
     } else {
       const audio = new Audio(
@@ -73,8 +78,6 @@ const CalcGameView: React.FC = (): ReactElement => {
   };
   useEffect(() => {
     createProblem();
-    setCurrentProblem();
-    // SUBTRACTION,MULTIPLICATION,DIVISION,
   }, []);
   useEffect(() => {
     if (inputEl && inputEl.current) {
@@ -107,11 +110,36 @@ const CalcGameView: React.FC = (): ReactElement => {
       </Button>
     </Grid>
   );
+  type PropsShowProgress = { progress: number };
+  const ShowProgress: React.FC<PropsShowProgress> = ({
+    children,
+    progress,
+  }): ReactElement => {
+    const stars: boolean[] = [];
+    for (let i = 0; i < 10; i++) {
+      if (i < progress) {
+        stars.push(true);
+      } else {
+        stars.push(false);
+      }
+    }
+    return (
+      <>
+        {stars.map((val: boolean) => {
+          return <>{val ? <>{"★"}</> : <>{"☆"}</>}</>;
+        })}
+      </>
+    );
+  };
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       const date = new Date();
       secondsPassed.current = secondsPassed.current + 1;
       setTime(date.toLocaleTimeString());
+      if (secondsPassed.current % 3 === 0) {
+        setAndGetGameProgressAndSetToProfile(numberProgress - 1);
+      }
     }, 1000);
     return () => {
       clearTimeout(timeout);
@@ -140,7 +168,9 @@ const CalcGameView: React.FC = (): ReactElement => {
               <Typography variant="h6"> あいて</Typography>
             </Grid>
             <Grid item xs={8}>
-              <Typography variant="h6"> ★★★★★★★☆☆☆</Typography>
+              <Typography variant="h6">
+                <ShowProgress progress={opponentGameProgress + 1} />
+              </Typography>
             </Grid>
           </Grid>
           <Grid container item spacing={0} alignItems="center">
@@ -148,7 +178,9 @@ const CalcGameView: React.FC = (): ReactElement => {
               <Typography variant="h6">じぶん</Typography>
             </Grid>
             <Grid item xs={8}>
-              <Typography variant="h6"> ★★★★★★★★☆☆</Typography>
+              <Typography variant="h6">
+                <ShowProgress progress={numberProgress} />
+              </Typography>
             </Grid>
           </Grid>
           <Grid container item spacing={3} alignItems="center">

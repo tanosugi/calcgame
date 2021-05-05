@@ -59,27 +59,27 @@ export const CREATE_GAME = gql`
   }
 `;
 
-// export const JOIN_GAME = gql`
-//   mutation($id: ID!, $idToJoinGame: Int!) {
-//     joinGame(input: { id: $id, idToJoinGame: $idToJoinGame }) {
-//       profile {
-//         id
-//         gamePlaying {
-//           edges {
-//             node {
-//               id
-//               idToStartGame
-//               ownerId
-//               ownerProgress
-//               joinerId
-//               joinerProgress
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-// `;
+export const JOIN_GAME = gql`
+  mutation($id: ID!, $idToJoinGame: Int!) {
+    joinGame(input: { id: $id, idToJoinGame: $idToJoinGame }) {
+      profile {
+        id
+        gamePlaying {
+          edges {
+            node {
+              id
+              idToStartGame
+              ownerId
+              ownerProgress
+              joinerId
+              joinerProgress
+            }
+          }
+        }
+      }
+    }
+  }
+`;
 
 export const SET_AND_GET_GAME_PROGRESS = gql`
   mutation($id: ID!, $progress: Int!) {

@@ -4,16 +4,17 @@ import {
   Container,
   Grid,
   TextField,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import React, { ReactElement, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { useBattleContext } from "../context/BattleContext";
 import { useUserContext } from "../context/UserContext";
 
 const MeetView: React.FC = (): ReactElement => {
+  const navigation = useNavigate();
   const { redirectIfNotLoggedIn } = useUserContext();
   const {
-    queryAndSetUserProfId,
     createGameAndSetToProfile,
     joinGameAndSetToProfile,
   } = useBattleContext();
@@ -32,11 +33,10 @@ const MeetView: React.FC = (): ReactElement => {
   };
   const handleClickAnswer = () => {
     console.log("handleClickAnswer");
-    queryAndSetUserProfId();
-    // createGameAndSetToProfile(parseInt(inputAnswer));
     isOwner
       ? createGameAndSetToProfile(parseInt(inputAnswer))
       : joinGameAndSetToProfile(parseInt(inputAnswer));
+    navigation("/calcgame");
   };
   const handleInput = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

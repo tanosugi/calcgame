@@ -1,4 +1,4 @@
-import random
+# import random
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -9,7 +9,7 @@ from django.db import models
 class Game(models.Model):
     # random.seed(datetime.now())
     id_to_start_game = models.IntegerField(
-        default=random.randint(1111, 9999),
+        # default=random.randint(1111, 9999),
     )
     owner_id = models.CharField(max_length=124, default="")
     joiner_id = models.CharField(max_length=124, default="")
