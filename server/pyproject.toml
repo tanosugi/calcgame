@@ -18,7 +18,7 @@ django-filter = "^2.4.0"
 psycopg2-binary = "^2.8.6"
 django-extensions = "^3.1.1"
 PyJWT = "1.7.1"
-uWSGI = "^2.0.19"
+# uWSGI = "^2.0.19"
 sentry-sdk = "^1.0.0"
 numpy = "^1.20.2"
 
